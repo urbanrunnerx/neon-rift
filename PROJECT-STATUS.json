@@ -12,7 +12,7 @@
   "real_browser_offline_tested": false,
   "phone_install_tested": false,
   "github_uploaded": true,
-  "github_pages_live": false,
+  "github_pages_live": true,
   "planned_site": "https://urbanrunnerx.github.io/neon-rift/install.html",
   "android_ci_status": "success",
   "workflow_url": "https://github.com/urbanrunnerx/neon-rift/actions/workflows/android.yml",
@@ -26,5 +26,9 @@
   "apk_url": "https://github.com/urbanrunnerx/neon-rift/releases/download/dev-2-1/Neon-Rift.apk",
   "apk_sha256": "88e68953470a78996d9c12d9741d849358c61b61b737797dd20ef055758785a1",
   "apk_signature_verified": true,
-  "stable_release_signing_configured": false
+  "stable_release_signing_configured": false,
+  "web_install_url": "https://urbanrunnerx.github.io/neon-rift/install.html",
+  "github_pages_verified_run_url": "https://github.com/urbanrunnerx/neon-rift/actions/runs/34765235522",
+  "github_pages_verified_commit": "090e84390bb50a5536627dd8a4337f4c5613c433",
+  "github_pages_verification": "Successful GitHub Pages deployment from main /docs; physical-phone installation remains unverified."
 }
