@@ -28,9 +28,9 @@
   "apk_signature_verified": true,
   "stable_release_signing_configured": false,
   "web_install_url": "https://urbanrunnerx.github.io/neon-rift/install.html",
-  "github_pages_verified_run_url": "https://github.com/urbanrunnerx/neon-rift/actions/runs/34765235522",
-  "github_pages_verified_commit": "090e84390bb50a5536627dd8a4337f4c5613c433",
-  "github_pages_verification": "Successful GitHub Pages deployment from main /docs; physical-phone installation remains unverified.",
+  "github_pages_verified_run_url": "https://github.com/urbanrunnerx/neon-rift/actions/runs/34767029956",
+  "github_pages_verified_commit": "422f0a75850451773cbc87ae031b460a5309e3c7",
+  "github_pages_verification": "Artist Kit 0.3 successfully deployed from main /docs. Chromium rendering, install-state, PNG, and offline checks passed; physical-phone installation remains unverified.",
   "web_edition_version": "0.3.0",
   "web_browser_test_engine": "Chromium / Playwright 1.58.2 with SwiftShader on GitHub Actions",
   "web_artist_kit_tested_commit": "a104b6a5d68a4ca82fadf37e875a84ab731c3f80",
@@ -41,5 +41,6 @@
   "web_install_controls_hidden_in_simulated_installed_mode": true,
   "web_artist_kit_screenshots_reviewed": true,
   "web_artist_kit_phone_tested": false,
-  "native_apk_includes_artist_kit": false
+  "native_apk_includes_artist_kit": false,
+  "web_artist_kit_live": true
 }
