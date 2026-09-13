@@ -37,9 +37,11 @@ The signed output is `build/apk/Neon-Rift.apk`. To enable a stable signing ident
 
 ## Separate web edition
 
+**[Install Neon Rift Web Edition](https://urbanrunnerx.github.io/neon-rift/install.html)** — open in Chrome or Samsung Internet, then choose Install web app or the browser menu’s Add to Home screen / Install app. No manual APK download is required. Keep the app open until it reports Offline ready before testing an offline launch.
+
 `docs/` contains an HTML/JavaScript/WebGL 2 edition with browser home-screen installation and a service worker. It shares shader assets with the native app but is a separate application.
 
-To publish it with GitHub Pages, use repository Settings → Pages → Deploy from a branch → `main` → `/docs`. Confirm a successful Pages deployment before using the intended address `https://urbanrunnerx.github.io/neon-rift/install.html`. Uploading these files alone does not activate Pages.
+GitHub Pages is enabled and publishes `main` → `/docs`. [The initial Pages deployment succeeded](https://github.com/urbanrunnerx/neon-rift/actions/runs/34765235522) on September 13, 2026. Future changes to the published source are deployed by GitHub Pages. Android home-screen installation and offline behavior still need a physical-phone check.
 
 ```sh
 node tests/test-web-motion.mjs
