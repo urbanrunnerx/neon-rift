@@ -8,8 +8,8 @@
   "web_edition_source": true,
   "web_motion_unit_tests_passed": true,
   "service_worker_mock_unit_tests_passed": true,
-  "webgl_browser_runtime_tested": false,
-  "real_browser_offline_tested": false,
+  "webgl_browser_runtime_tested": true,
+  "real_browser_offline_tested": true,
   "phone_install_tested": false,
   "github_uploaded": true,
   "github_pages_live": true,
@@ -30,5 +30,16 @@
   "web_install_url": "https://urbanrunnerx.github.io/neon-rift/install.html",
   "github_pages_verified_run_url": "https://github.com/urbanrunnerx/neon-rift/actions/runs/34765235522",
   "github_pages_verified_commit": "090e84390bb50a5536627dd8a4337f4c5613c433",
-  "github_pages_verification": "Successful GitHub Pages deployment from main /docs; physical-phone installation remains unverified."
+  "github_pages_verification": "Successful GitHub Pages deployment from main /docs; physical-phone installation remains unverified.",
+  "web_edition_version": "0.3.0",
+  "web_browser_test_engine": "Chromium / Playwright 1.58.2 with SwiftShader on GitHub Actions",
+  "web_artist_kit_tested_commit": "a104b6a5d68a4ca82fadf37e875a84ab731c3f80",
+  "web_artist_kit_verified_run_url": "https://github.com/urbanrunnerx/neon-rift/actions/runs/34766840517",
+  "web_artist_kit_browser_tests_passed": 5,
+  "web_artist_kit_png_export_verified": true,
+  "web_artist_kit_saved_composition_verified": true,
+  "web_install_controls_hidden_in_simulated_installed_mode": true,
+  "web_artist_kit_screenshots_reviewed": true,
+  "web_artist_kit_phone_tested": false,
+  "native_apk_includes_artist_kit": false
 }
