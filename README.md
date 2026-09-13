@@ -1,41 +1,49 @@
-# Neon Rift — native and web editions
+# Neon Rift
 
-Two separate applications share the portal shader assets:
+Native Android light playground, built with Java and OpenGL ES 3. Drag to attract droplets, pinch to zoom, double tap to pulse, and switch among four palettes and three quality modes.
 
-- **Native Android**: Java / OpenGL ES. No HTML, JavaScript, WebView, or browser in the Android app. See OPEN-IN-ANDROID-STUDIO.md.
-- **Web Edition**: HTML / JavaScript / WebGL 2, with a manifest and service worker for browser-managed home-screen installation. It is not the native app without an APK. Chrome may use an internal WebAPK; users do not manually sideload an APK file.
+## Install on Android
 
-The source and Android workflow are now in `urbanrunnerx/neon-rift`. Check [Android builds](https://github.com/urbanrunnerx/neon-rift/actions/workflows/android.yml) for current results and [Releases](https://github.com/urbanrunnerx/neon-rift/releases) for APKs. A development APK is published only after its build, signature verification, and emulator smoke test succeed.
+**[Download Neon-Rift.apk](https://github.com/urbanrunnerx/neon-rift/releases/download/dev-2-1/Neon-Rift.apk)** — development build 2, Android version 0.1.0. [Successful build and emulator checks](https://github.com/urbanrunnerx/neon-rift/actions/runs/34764260238).
 
-The original local test history is in DELIVERY-STATUS.md. GitHub Pages and physical-phone installation remain separate verification steps.
+Open [GitHub Releases](https://github.com/urbanrunnerx/neon-rift/releases) and download **Neon-Rift.apk** from a successful development release. Open the downloaded file on your phone and follow Android’s install prompt. No Android Studio, source conversion, or APK-building service is needed to install a published APK. The source ZIP downloads are for development.
 
-## Publish both source and the web edition on GitHub
+The app requires Android 8.0 or later and OpenGL ES 3.0. It has no accounts, ads, analytics, network permission, or WebView. It saves its controls locally on your device.
 
-1. Create https://github.com/new?name=neon-rift&owner=urbanrunnerx&visibility=public and turn on Add README. Public repositories expose their source files; use no credentials or private material here.
-2. Extract this GitHub-upload ZIP. Upload its CONTENTS into the repository root, not the ZIP itself and not an extra enclosing folder. `app/`, `docs/`, `settings.gradle` and this README should be at the top level. Preserve the `.github/` folder when uploading it. The reference video is not included.
-3. In repository Settings > Pages, choose Deploy from a branch, then `main` and `/docs`, and Save. This branch/folder setting publishes the web edition without waiting for an Android build. A public repository is required for GitHub Pages on GitHub Free.
-4. Wait for the GitHub Pages deployment to succeed and use the actual Visit site link in Settings > Pages. The intended installation page is `/neon-rift/install.html` on the user's GitHub Pages domain. It is not live merely because these files exist.
+Development builds without configured signing secrets use a new signing key for each CI run. Installing a different such build requires uninstalling the old one first, which removes its saved settings. Stable update signing has not been configured or verified.
 
-On Android, open the live page in Chrome or Samsung Internet, then tap its install button when offered, or use the browser menu's Add to Home screen / Install app. Use Open and explore to run it directly. Keep it open until Offline ready before testing offline relaunch.
+## Build and release status
 
-## Development and checks
+[Android workflow](https://github.com/urbanrunnerx/neon-rift/actions/workflows/android.yml) · [Development releases](https://github.com/urbanrunnerx/neon-rift/releases)
 
-`node tests/test-web-motion.mjs` — JavaScript motion checks.
+Source pushes to `main` start the Android workflow; it can also be run manually from Actions. The workflow sets up JDK 17 and the Android SDK, runs motion/source tests, builds and signs the APK with SDK 35 tools, verifies the package, then installs and launches it in an emulator. Publication is gated on those checks. Test logs and Android screenshots are retained as workflow artifacts. Physical-phone performance remains a separate check.
 
-`node tests/test-service-worker.cjs` — service-worker logic with mocked CacheStorage, not an actual browser offline test.
+The first workflow run identified a missing `sdkmanager` setup. The workflow now initializes the SDK explicitly. Build 2 succeeded on September 13, 2026: compilation, signature/package verification, emulator install/launch, renderer initialization, gesture input, and background/resume passed. Launch and resume screenshots were reviewed; the software emulator is not a phone-performance benchmark. `DELIVERY-STATUS.md` retains the earlier preparation history; it is not a current CI report.
 
-`bash tools/test-motion.sh` — native Java motion/syntax checks, not an Android build.
+## Continue development in Work
 
-For local browser testing on a computer with an unrestricted local server and WebGL 2, run `python -m http.server 8000 --directory docs` and open `http://localhost:8000/install.html`. Do not use file:// for PWA installation/service-worker testing.
+Use this repository as the canonical project for future programming and updates in ChatGPT Work. `AGENTS.md` documents the native/web structure, tests, and delivery requirements.
 
-When changing web files, increment the cache version in `docs/sw.js`. A service-worker install requires every listed precache asset to exist. Do not add nonexistent APK or download buttons to the page.
+For Android Studio, follow [OPEN-IN-ANDROID-STUDIO.md](OPEN-IN-ANDROID-STUDIO.md). Gradle 8.11.1 and Android Gradle Plugin 8.9.2 are configured. Run the supplied Windows or macOS/Linux preparation script to retrieve and verify the Gradle wrapper. CI builds directly with Android SDK tools and does not require that bootstrap.
 
-The `.github/workflows/android.yml` workflow runs on source pushes to `main` and supports manual runs from Actions. It uses official Android SDK command-line tools directly, so the Android Studio wrapper bootstrap is not required in CI. It does not deploy the web app. Its release is gated on Android build/emulator checks.
+For local command-line builds, install JDK 17, Android SDK platform 35, build-tools 35.0.0, and platform-tools; set `ANDROID_HOME`, then run:
 
-Without optional repository signing secrets, CI generates a temporary development signing key. Different development builds will require uninstalling the old app before installing the new one. For stable updates, configure `NEON_RIFT_KEYSTORE_B64`, `NEON_RIFT_STORE_PASSWORD`, `NEON_RIFT_KEY_PASSWORD`, and `NEON_RIFT_KEY_ALIAS` as repository secrets; never commit the private keystore.
+```sh
+bash tools/test-motion.sh
+bash tools/build-apk.sh
+```
 
-Official references:
-- https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-new-repository
-- https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site
-- https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Making_PWAs_installable
-- https://developer.android.com/build/releases/agp-8-9-0-release-notes
+The signed output is `build/apk/Neon-Rift.apk`. To enable a stable signing identity in CI, configure `NEON_RIFT_KEYSTORE_B64`, `NEON_RIFT_STORE_PASSWORD`, `NEON_RIFT_KEY_PASSWORD`, and `NEON_RIFT_KEY_ALIAS` as repository secrets, with a securely backed-up private key. Never commit the key.
+
+## Separate web edition
+
+`docs/` contains an HTML/JavaScript/WebGL 2 edition with browser home-screen installation and a service worker. It shares shader assets with the native app but is a separate application.
+
+To publish it with GitHub Pages, use repository Settings → Pages → Deploy from a branch → `main` → `/docs`. Confirm a successful Pages deployment before using the intended address `https://urbanrunnerx.github.io/neon-rift/install.html`. Uploading these files alone does not activate Pages.
+
+```sh
+node tests/test-web-motion.mjs
+node tests/test-service-worker.cjs
+```
+
+The service-worker tests use mocked browser storage; actual offline relaunch and phone home-screen installation still need device checks. Increment the cache version in `docs/sw.js` when web assets change.
