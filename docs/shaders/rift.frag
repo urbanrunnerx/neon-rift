@@ -14,6 +14,9 @@ uniform vec4 uBalls[40];
 uniform vec2 uPointer;
 uniform float uTouch;
 uniform float uPulse;
+uniform float uHue, uSaturation, uExposure, uContrast, uStars, uTexture, uRim, uMerge, uSize, uRotation;
+uniform int uSymmetry;
+uniform vec3 uColorA, uColorB, uColorC, uBackground;
 
 float hash21(vec2 p) {
     vec3 p3 = fract(vec3(p.xyx) * 0.1031);
@@ -42,6 +45,7 @@ float smin(float a, float b, float k) {
 mat2 rotate(float a) { float s=sin(a),c=cos(a); return mat2(c,-s,s,c); }
 vec3 edgePalette(vec2 p) {
     float t=clamp(0.5+p.y*0.65+sin(p.x*2.5+uTime*0.14)*0.14,0.0,1.0);
+    if(uTheme==4) return mix(mix(uColorA,uColorB,smoothstep(0.0,0.5,t)),uColorC,smoothstep(0.5,1.0,t));
     if(uTheme==0) {
         vec3 a=mix(vec3(0.72,0.19,1.0),vec3(1.0,0.78,0.34),smoothstep(0.08,0.48,t));
         return mix(a,vec3(0.30,1.0,0.02),smoothstep(0.50,0.92,t));
@@ -67,7 +71,12 @@ vec3 stars(vec2 p,float scale,float layer) {
 void main() {
     float shortSide=min(uResolution.x,uResolution.y);
     vec2 screen=(2.0*gl_FragCoord.xy-uResolution)/shortSide;
-    vec2 p=screen/uZoom;
+    vec2 p=rotate(uRotation)*screen/uZoom;
+    if(uSymmetry>0) {
+        float sector=6.28318530718/float(uSymmetry);
+        float angle=abs(mod(atan(p.y,p.x)+sector*0.5,sector)-sector*0.5);
+        p=length(p)*vec2(cos(angle),sin(angle));
+    }
     float time=uTime;
     vec2 warp=vec2(sin(p.y*5.1+time*0.65)+sin(p.x*8.0-time*0.43),
                    cos(p.x*4.6-time*0.47)+sin(p.y*7.6+time*0.40));
@@ -75,15 +84,15 @@ void main() {
     float sdf=100.0;
     for(int i=0;i<40;i++) {
         if(i>=uCount) break;
-        float d=length(w-uBalls[i].xy)-uBalls[i].z;
-        sdf=smin(sdf,d,0.12+0.038*uTurbulence);
+        float d=length(w-uBalls[i].xy)-uBalls[i].z*uSize;
+        sdf=smin(sdf,d,(0.12+0.038*uTurbulence)*uMerge);
     }
     float aa=max(fwidth(sdf),1.1/(shortSide*uZoom));
     float inside=1.0-smoothstep(-aa,aa,sdf);
     vec3 edge=edgePalette(p);
-    vec3 background=vec3(0.008,0.013,0.028);
+    vec3 background=uBackground;
     background+=vec3(0.028,0.018,0.064)*exp(-dot(screen*0.65,screen*0.65));
-    background+=stars(screen+vec2(time*0.001,0.0),13.0,5.0)*0.085;
+    background+=stars(screen+vec2(time*0.001,0.0),13.0,5.0)*0.085*uStars;
     float halo=exp(-max(sdf,0.0)*19.0)*smoothstep(-aa,aa,sdf);
     background+=edge*halo*0.24*uGlow;
     background+=edge*exp(-max(sdf,0.0)*7.0)*smoothstep(0.0,0.05,sdf)*0.045*uGlow;
@@ -100,12 +109,14 @@ void main() {
     if(uTheme==1) {cool=vec3(0.025,0.39,0.49);warm=vec3(0.31,0.055,0.68);}
     if(uTheme==2) {cool=vec3(0.47,0.045,0.018);warm=vec3(0.71,0.15,0.025);}
     if(uTheme==3) {cool=vec3(0.09,0.11,0.44);warm=vec3(0.20,0.16,0.32);}
+    if(uTheme==4) {cool=uColorA*.65;warm=uColorB*.55;}
+    n*=uTexture;dust*=uTexture;
     nebula+=cool*pow(n,2.0)*(0.28+band*1.15);
     nebula+=warm*pow(dust,3.0)*0.65;
     nebula+=vec3(0.14,0.28,0.64)*pow(dust*band,4.0)*0.55;
-    nebula+=stars(q+vec2(time*0.003,0.0),14.0,1.0)*0.75;
-    if(uQuality>0) nebula+=stars(q*1.1-vec2(time*0.002,0.0),29.0,2.0)*0.38;
-    if(uQuality>1) nebula+=stars(q*1.2+time*0.001,51.0,3.0)*0.22;
+    nebula+=stars(q+vec2(time*0.003,0.0),14.0,1.0)*0.75*uStars;
+    if(uQuality>0) nebula+=stars(q*1.1-vec2(time*0.002,0.0),29.0,2.0)*0.38*uStars;
+    if(uQuality>1) nebula+=stars(q*1.2+time*0.001,51.0,3.0)*0.22*uStars;
     // Delicate rotating arcs and filaments, visible only within the portal.
     float r=length(q-vec2(0.08,-0.04));
     float arc=exp(-abs(r-0.58)*180.0)*0.035
@@ -113,8 +124,8 @@ void main() {
     nebula+=vec3(0.10,0.31,0.7)*arc;
     nebula+=edge*exp(-abs(sdf)*36.0)*0.15*uGlow;
     vec3 color=mix(background,nebula,inside);
-    float rim=exp(-abs(sdf)*125.0);
-    float core=exp(-abs(sdf)*280.0);
+    float rim=exp(-abs(sdf)*125.0/uRim);
+    float core=exp(-abs(sdf)*280.0/uRim);
     float flow=0.8+0.2*sin(p.x*5.0+p.y*7.0-time*1.2);
     color+=edge*rim*(0.90+flow*0.25)*uGlow;
     color+=mix(edge,vec3(1.0),0.72)*core*0.62*uGlow;
@@ -125,7 +136,12 @@ void main() {
     float vignette=1.0-0.15*smoothstep(0.4,2.6,length(screen));
     color*=vignette;
     // Filmic soft rolloff keeps bright rims luminous without solid white blobs.
+    vec3 axis=normalize(vec3(1.0));
+    color=color*cos(uHue)+cross(axis,color)*sin(uHue)+axis*dot(axis,color)*(1.0-cos(uHue));
+    color=mix(vec3(dot(color,vec3(0.2126,0.7152,0.0722))),color,uSaturation);
+    color=max(color,vec3(0.0))*uExposure;
     color=1.0-exp(-color*1.35);
     color=pow(max(color,vec3(0.0)),vec3(0.80));
+    color=clamp((color-0.5)*uContrast+0.5,0.0,1.0);
     fragColor=vec4(color,1.0);
 }

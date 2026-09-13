@@ -1,9 +1,10 @@
-// Port of the native Java motion model. Rendering remains in the original GLSL.
+// Native motion model with web Artist Kit brush extensions.
 export const clamp = (x, low, high) => Math.max(low, Math.min(high, x));
 export class Simulation {
   constructor(seed = 731) {
     this.balls = new Float32Array(160);
     for (const key of ['phase','rate','radius','dx','dy','vx','vy']) this[key] = new Float32Array(40);
+    this.touchMode="attract";this.touchStrength=1;
     this.reset(seed);
   }
   reset(seed) {
@@ -41,13 +42,24 @@ export class Simulation {
         let ax = -this.dx[i]*5.2-this.vx[i]*3.1, ay = -this.dy[i]*5.2-this.vy[i]*3.1;
         if (this.touching) {
           const tx=this.pointerX-this.balls[i*4],ty=this.pointerY-this.balls[i*4+1],influence=1.8/(.15+tx*tx+ty*ty);
-          ax += clamp(tx*influence,-3.6,3.6); ay += clamp(ty*influence,-3.6,3.6);
+          let fx=tx,fy=ty;
+          if(this.touchMode==='repel'){fx=-tx;fy=-ty;}
+          if(this.touchMode==='swirl'){fx=-ty;fy=tx;}
+          if(this.touchMode==='counterSwirl'){fx=ty;fy=-tx;}
+          const strength=Number.isFinite(this.touchStrength)?clamp(this.touchStrength,.2,2):1;
+          ax += clamp(fx*influence*strength,-3.6,3.6); ay += clamp(fy*influence*strength,-3.6,3.6);
         }
         this.vx[i]=clamp(this.vx[i]+ax*dt,-2.5,2.5);this.vy[i]=clamp(this.vy[i]+ay*dt,-2.5,2.5);
         this.dx[i]=clamp(this.dx[i]+this.vx[i]*dt,-1.2,1.2);this.dy[i]=clamp(this.dy[i]+this.vy[i]*dt,-1.2,1.2);
       }
       this.updatePositions();
     }
+  }
+  sculpt(index,x,y) {
+    if(!Number.isInteger(index)||index<0||index>=40||!Number.isFinite(x)||!Number.isFinite(y))return;
+    const baseX=this.balls[index*4]-this.dx[index],baseY=this.balls[index*4+1]-this.dy[index];
+    this.dx[index]=clamp(x-baseX,-1.2,1.2);this.dy[index]=clamp(y-baseY,-1.2,1.2);
+    this.vx[index]=this.vy[index]=0;this.updatePositions();
   }
   updatePositions() {
     for(let i=0;i<40;i++) {

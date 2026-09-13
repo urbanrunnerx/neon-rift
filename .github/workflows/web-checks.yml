@@ -1,0 +1,42 @@
+name: Test web Artist Kit
+on:
+  push:
+    branches: [main, artist-toolkit]
+    paths: ['docs/**', 'tests/**', '.github/workflows/web-checks.yml']
+  pull_request:
+    paths: ['docs/**', 'tests/**', '.github/workflows/web-checks.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - name: State, motion, and cache checks
+        run: |
+          node tests/test-artist-state.mjs
+          node tests/test-web-motion.mjs
+          node tests/test-service-worker.cjs
+      - name: Install browser test dependencies
+        working-directory: tests/browser
+        run: npm install --no-package-lock
+      - name: Install Chromium
+        working-directory: tests/browser
+        run: npx playwright install --with-deps chromium
+      - name: Exercise artwork, export, installed mode, offline, and mobile layouts
+        working-directory: tests/browser
+        run: npm test
+      - name: Keep screenshots, exports, and test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: artist-kit-browser-report
+          path: |
+            tests/browser/test-results/
+            tests/browser/playwright-report/
+          retention-days: 14

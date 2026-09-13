@@ -39,13 +39,14 @@ The signed output is `build/apk/Neon-Rift.apk`. To enable a stable signing ident
 
 **[Install Neon Rift Web Edition](https://urbanrunnerx.github.io/neon-rift/install.html)** — open in Chrome or Samsung Internet, then choose Install web app or the browser menu’s Add to Home screen / Install app. No manual APK download is required. Keep the app open until it reports Offline ready before testing an offline launch.
 
-`docs/` contains an HTML/JavaScript/WebGL 2 edition with browser home-screen installation and a service worker. It shares shader assets with the native app but is a separate application.
+`docs/` contains an HTML/JavaScript/WebGL 2 edition with browser home-screen installation and a service worker. Version 0.3 adds the Artist’s Kit: custom colors, hue/saturation/brightness/contrast, bloom and nebula controls, symmetry and kaleidoscopes, six touch brushes, eight presets, surprise combinations, undo/redo, 12 saved compositions, and PNG exports up to a 2048-pixel long edge. Install buttons hide in installed mode. These controls are currently in the web edition; the native APK remains a separate application.
 
 GitHub Pages is enabled and publishes `main` → `/docs`. [The initial Pages deployment succeeded](https://github.com/urbanrunnerx/neon-rift/actions/runs/34765235522) on September 13, 2026. Future changes to the published source are deployed by GitHub Pages. Android home-screen installation and offline behavior still need a physical-phone check.
 
 ```sh
+node tests/test-artist-state.mjs
 node tests/test-web-motion.mjs
 node tests/test-service-worker.cjs
 ```
 
-The service-worker tests use mocked browser storage; actual offline relaunch and phone home-screen installation still need device checks. Increment the cache version in `docs/sw.js` when web assets change.
+The `Test web Artist Kit` workflow runs Chromium checks for rendering, install-button state, actual offline relaunch, artwork saving, PNG export, and responsive layouts. Local service-worker tests use mocked browser storage. Physical-phone home-screen installation still needs a device check. Existing web installations receive new assets through the service worker; use Save & reload when offered, or close and reopen after the update downloads. Increment the cache version in `docs/sw.js` when web assets change.
