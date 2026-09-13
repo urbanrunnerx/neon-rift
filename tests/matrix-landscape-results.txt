@@ -1,0 +1,5 @@
+Renderer: llvmpipe (LLVM 19.1.7, 256 bits)
+Version: OpenGL ES 3.2 Mesa 25.0.7-2
+Rendered matrix-000.png
+PASS: shader compilation, link, draw, readback, nonblank output, GL errors = 0
+PASS: 36 palette/quality/droplet combinations at 640x320, including pulse/touch uniforms.

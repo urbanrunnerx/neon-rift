@@ -1,0 +1,7 @@
+{
+  "base": "localhost under /neon-rift/ (not a public URL)",
+  "tests": [],
+  "phone_tested": false,
+  "github_deployed": false,
+  "failure": "Page.goto: net::ERR_BLOCKED_BY_ADMINISTRATOR at http://127.0.0.1:35915/neon-rift/install.html\nCall log:\n  - navigating to \"http://127.0.0.1:35915/neon-rift/install.html\", waiting until \"networkidle\"\n"
+}

@@ -1,0 +1,7 @@
+{
+  "suite": "JavaScript motion model",
+  "passed": true,
+  "frames": 1200,
+  "assertions": 144005,
+  "notes": "Most assertions are repeated finite/bounds checks, not independent scenarios."
+}

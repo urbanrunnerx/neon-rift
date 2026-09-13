@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#070911"><title>Neon Rift · Web Edition</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-192.png"><link rel="stylesheet" href="style.css"></head>
+<body class="playground"><canvas id="rift" aria-label="Interactive glowing portals. Drag to attract, double-tap to pulse, and pinch to zoom."></canvas>
+<header class="hud"><div><span class="eyebrow">WEB EDITION · 0.2</span><h1>NEON RIFT<span class="brand-dot">.</span></h1></div><div class="top-actions"><a href="install.html" class="chip">Install</a><button id="cinema" class="chip" aria-label="Hide controls">Cinema</button></div></header>
+<div id="loading" class="notice" role="status">Opening the rift…</div><div id="error" class="error" role="alert" hidden></div>
+<div class="bottom-ui"><div class="telemetry"><span id="stats">Starting renderer</span><span id="cacheStatus">Preparing offline access</span></div>
+<nav class="dock" aria-label="Simulation controls"><button id="pause" aria-pressed="false">Pause</button><button id="pulse">Pulse</button><button id="shuffle">Reshape</button><button id="settings" aria-expanded="false" aria-controls="controls">Settings</button></nav>
+<p class="hint">Drag to attract · Double-tap to pulse · Pinch to zoom</p></div>
+<section id="controls" class="sheet" aria-label="Settings" hidden><div class="sheet-head"><div><span class="eyebrow">MAKE IT YOURS</span><h2>Shape the atmosphere</h2></div><button id="closeSettings" class="chip" aria-label="Close settings">Done</button></div>
+<div class="form-row"><label for="theme">Palette</label><select id="theme"><option value="0">Neon · Lime / Gold / Violet</option><option value="1">Aurora · Teal / Violet</option><option value="2">Ember · Crimson / Gold</option><option value="3">Void · Ice / Indigo</option></select></div>
+<div class="form-row"><label for="quality">Graphics</label><select id="quality"><option value="0">Eco · 30 fps cap</option><option value="1">Balanced · 60 fps cap</option><option value="2">Ultra · 60 fps cap</option></select></div>
+<label class="slider-label" for="count">Droplets <output id="countValue"></output></label><input id="count" type="range" min="12" max="40" step="1">
+<label class="slider-label" for="speed">Motion <output id="speedValue"></output></label><input id="speed" type="range" min="0.15" max="2" step="0.05">
+<label class="slider-label" for="glow">Glow <output id="glowValue"></output></label><input id="glow" type="range" min="0.3" max="2" step="0.05">
+<label class="slider-label" for="turbulence">Turbulence <output id="turbulenceValue"></output></label><input id="turbulence" type="range" min="0" max="2" step="0.05">
+<label class="slider-label" for="zoom">Zoom <output id="zoomValue"></output></label><input id="zoom" type="range" min="0.55" max="1.8" step="0.01">
+<button id="resetSettings" class="wide">Restore defaults</button><p class="fine">Graphics caps are targets, not measured phone performance. Reduce quality if your phone feels warm.</p></section>
+<button id="showUI" class="chip cinema-exit" hidden>Show controls</button>
+<noscript><div class="error">JavaScript is required for this separate web edition.</div></noscript>
+<script src="pwa.js" defer></script><script type="module" src="app.js"></script></body></html>

@@ -1,0 +1,12 @@
+{
+  "suite": "Service-worker logic with mocked CacheStorage and offline fetch",
+  "passed": true,
+  "checks": [
+    "All precached files exist",
+    "Only this app old caches removed",
+    "Install-source query maps to cached entry",
+    "Shader available in mock offline cache",
+    "Other apps not intercepted"
+  ],
+  "real_browser_offline_test": false
+}

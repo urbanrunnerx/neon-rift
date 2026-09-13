@@ -1,0 +1,21 @@
+plugins { id 'com.android.application' }
+android {
+    namespace 'com.urbanrunnerx.neonrift'
+    compileSdk 35
+    defaultConfig {
+        applicationId 'com.urbanrunnerx.neonrift'
+        minSdk 26
+        targetSdk 35
+        versionCode 1
+        versionName '0.1.0'
+    }
+    // Keep the original command-line manifest for the existing aapt2 builder.
+    sourceSets { main { manifest.srcFile 'src/studio/AndroidManifest.xml' } }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildTypes {
+        release { minifyEnabled false }
+    }
+}

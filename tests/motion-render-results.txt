@@ -1,0 +1,11 @@
+Renderer: llvmpipe (LLVM 19.1.7, 256 bits)
+Version: OpenGL ES 3.2 Mesa 25.0.7-2
+Rendered motion-000.png
+Rendered motion-020.png
+Rendered motion-040.png
+Rendered motion-060.png
+Rendered motion-080.png
+Rendered motion-100.png
+Rendered motion-120.png
+Rendered motion-140.png
+PASS: shader compilation, link, draw, readback, nonblank output, GL errors = 0

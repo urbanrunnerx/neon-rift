@@ -1,0 +1,14 @@
+{
+  "test_environment": "Chromium about:blank with in-memory CSS, modules and shader assets; no server navigation. Localhost navigation was blocked by browser administrator policy.",
+  "tests": [
+    {
+      "test": "Install page layout and manual-instructions fallback",
+      "passed": true,
+      "details": null
+    }
+  ],
+  "offline_browser_reload_tested": false,
+  "phone_install_tested": false,
+  "github_deployed": false,
+  "failure": "Page.wait_for_function: Timeout 3000ms exceeded."
+}

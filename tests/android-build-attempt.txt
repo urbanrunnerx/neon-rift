@@ -1,0 +1,2 @@
+ERROR: Set ANDROID_HOME to an installed Android SDK.
+Build exit status: 2

@@ -1,0 +1,96 @@
+name: Build and test Android APK
+
+on:
+  push:
+    branches: [main, master]
+    paths-ignore: ['docs/**', '*.md']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: neon-rift-android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Install required SDK components
+        run: |
+          sdkmanager 'platforms;android-35' 'build-tools;35.0.0' 'platform-tools'
+      - name: Motion and source syntax tests
+        run: bash tools/test-motion.sh
+      - name: Build and verify signed APK
+        env:
+          RIFT_KEYSTORE_B64: ${{ secrets.NEON_RIFT_KEYSTORE_B64 }}
+          RIFT_STORE_PASSWORD: ${{ secrets.NEON_RIFT_STORE_PASSWORD }}
+          RIFT_KEY_PASSWORD: ${{ secrets.NEON_RIFT_KEY_PASSWORD }}
+          RIFT_KEY_ALIAS: ${{ secrets.NEON_RIFT_KEY_ALIAS }}
+        run: |
+          if [[ -n "$RIFT_KEYSTORE_B64" ]]; then
+            export RIFT_KEYSTORE_PATH="$RUNNER_TEMP/neon-rift-signing.jks"
+            printf '%s' "$RIFT_KEYSTORE_B64" | base64 --decode > "$RIFT_KEYSTORE_PATH"
+            chmod 600 "$RIFT_KEYSTORE_PATH"
+          fi
+          bash tools/build-apk.sh
+      - name: Enable emulator acceleration
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Install and launch APK in Android emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: Nexus 5
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -camera-back none -camera-front none
+          disable-animations: true
+          script: bash tools/smoke-test.sh
+      - name: Preserve test reports and actual Android screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-test-reports
+          path: |
+            build/smoke/
+            build/tests/*.txt
+            build/apk/*verification.txt
+            build/apk/package-information.txt
+          if-no-files-found: warn
+      - name: Attach verified development APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Neon-Rift-APK
+          path: |
+            build/apk/Neon-Rift.apk
+            build/apk/Neon-Rift.apk.sha256
+          if-no-files-found: error
+      - name: Publish downloadable development release only after smoke tests pass
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="dev-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}"
+          cat > build/release-notes.md <<'NOTES'
+          Native Android development build: Java + OpenGL ES 3. No HTML or WebView.
+
+          Download **Neon-Rift.apk**, not the automatically generated source archives.
+          This workflow built, signed, verified, installed, and launched this APK in an Android emulator.
+          Physical-phone performance, touch layout, battery usage, and Android 17 compatibility still need device testing.
+
+          Unless repository signing secrets have been configured, this APK uses a temporary development key.
+          Another such build cannot update it in place: uninstalling the prior development build loses saved settings.
+          Establish a backed-up private signing key before long-term releases. Do not bypass device security.
+          NOTES
+          gh release create "$TAG" build/apk/Neon-Rift.apk build/apk/Neon-Rift.apk.sha256 \
+            --target "$GITHUB_SHA" --prerelease --title "Neon Rift · development build ${GITHUB_RUN_NUMBER}" \
+            --notes-file build/release-notes.md

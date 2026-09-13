@@ -1,0 +1,13 @@
+build/
+tests/classes/
+tests/frames.json
+__pycache__/
+*.jks
+*.keystore
+*.p12
+*.apk
+*.apk.idsig
+local.properties
+.idea/
+.gradle/
+docs/renderer/motion-*.png

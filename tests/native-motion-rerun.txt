@@ -1,0 +1,3 @@
+PASS: 4321123 assertions; deterministic seeding, reset, invalid input, 10-minute stress, 30/60-fps consistency.
+Maximum 30/60-fps error: 0.0
+PASS: Java syntax parsing for 5 source files. Android SDK type checking has NOT run.

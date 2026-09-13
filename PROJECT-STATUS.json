@@ -1,0 +1,20 @@
+{
+  "native_source": true,
+  "gradle_configuration_added": true,
+  "gradle_wrapper_jar_bundled": false,
+  "wrapper_first_run_setup_required": true,
+  "android_sdk_build_tested": false,
+  "apk_created": false,
+  "web_edition_source": true,
+  "web_motion_unit_tests_passed": true,
+  "service_worker_mock_unit_tests_passed": true,
+  "webgl_browser_runtime_tested": false,
+  "real_browser_offline_tested": false,
+  "phone_install_tested": false,
+  "github_uploaded": true,
+  "github_pages_live": false,
+  "planned_site": "https://urbanrunnerx.github.io/neon-rift/install.html",
+  "android_ci_status": "pending_first_run",
+  "workflow_url": "https://github.com/urbanrunnerx/neon-rift/actions/workflows/android.yml",
+  "releases_url": "https://github.com/urbanrunnerx/neon-rift/releases"
+}
