@@ -19,10 +19,14 @@ jobs:
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
+      - name: Set up Android SDK tools
+        uses: android-actions/setup-android@v4
+        with:
+          log-accepted-android-sdk-licenses: false
       - name: Install required SDK components
         run: |
           sdkmanager 'platforms;android-35' 'build-tools;35.0.0' 'platform-tools'
@@ -94,3 +98,4 @@ jobs:
           gh release create "$TAG" build/apk/Neon-Rift.apk build/apk/Neon-Rift.apk.sha256 \
             --target "$GITHUB_SHA" --prerelease --title "Neon Rift · development build ${GITHUB_RUN_NUMBER}" \
             --notes-file build/release-notes.md
+
